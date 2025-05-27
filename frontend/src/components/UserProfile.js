@@ -1,21 +1,25 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import UserProfileService from '../services/UserProfile.service';
 
 function UserProfile() {
   const [user, setUser] = useState(null);
+  const initialized = useRef(false);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch('http://localhost:8080/user.json');
-        const user = await response.json();
+        const user = await UserProfileService.fetchUserProfile();
         setUser(user);
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error(`Error fetching user data: ${error}`);
       }
     };
 
-    fetchUser();
-  }, []);
+    if (!initialized.current) {
+      initialized.current = true;
+      fetchUser();
+    }
+  });
 
   return (
     <section>

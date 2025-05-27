@@ -1,13 +1,19 @@
 import { render, screen } from '@testing-library/react';
 import UserProfile from './UserProfile';
+import UserProfileService from '../services/UserProfile.service';
 
 describe('UserProfile', () => {
-    global.fetch = jest.fn();
-    global.console.error = jest.fn();
+    jest.spyOn(UserProfileService, 'fetchUserProfile');
+    jest.spyOn(console, 'error');
+
+    beforeEach(() => {
+        UserProfileService.fetchUserProfile.mockClear();
+        console.error.mockClear();
+    });
 
     it('renders user profile data', async () => {
         // Mocking fetch for unit testing
-        fetch.mockResolvedValueOnce({ json: () => ({ name: 'Lucas', email: 'lucas@example.com' }) });
+        UserProfileService.fetchUserProfile.mockResolvedValueOnce({ name: 'Lucas', email: 'lucas@example.com' });
 
         // Render the component
         render(<UserProfile/>);
@@ -22,12 +28,16 @@ describe('UserProfile', () => {
         // Check if the user data is displayed correctly
         expect(nameElement).toBeInTheDocument();
         expect(emailElement).toBeInTheDocument();
+        
+        // Check spies
+        expect(UserProfileService.fetchUserProfile).toBeCalledTimes(1);
+        expect(console.error).toBeCalledTimes(0);
     });
 
     it('catch errors', async () => {
         // Mocking fetch error
-        fetch.mockImplementationOnce(() => {
-            throw new Error();
+        UserProfileService.fetchUserProfile.mockImplementationOnce(() => {
+            throw new Error('fake error');
         });
 
         // Render the component
@@ -35,5 +45,10 @@ describe('UserProfile', () => {
 
         // Check if the loading state is displayed initially
         expect(screen.getByText('Loading user data...')).toBeInTheDocument();
+
+        // Check spies
+        expect(UserProfileService.fetchUserProfile).toBeCalledTimes(1);
+        expect(console.error).toBeCalledTimes(1);
+        expect(console.error).toBeCalledWith('Error fetching user data: Error: fake error');
     });
 });
