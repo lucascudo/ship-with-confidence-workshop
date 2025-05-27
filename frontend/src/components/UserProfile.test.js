@@ -3,6 +3,7 @@ import UserProfile from './UserProfile';
 
 describe('UserProfile', () => {
     global.fetch = jest.fn();
+    global.console.error = jest.fn();
 
     it('renders user profile data', async () => {
         // Mocking fetch for unit testing
@@ -21,5 +22,18 @@ describe('UserProfile', () => {
         // Check if the user data is displayed correctly
         expect(nameElement).toBeInTheDocument();
         expect(emailElement).toBeInTheDocument();
+    });
+
+    it('catch errors', async () => {
+        // Mocking fetch error
+        fetch.mockImplementationOnce(() => {
+            throw new Error();
+        });
+
+        // Render the component
+        render(<UserProfile/>);
+
+        // Check if the loading state is displayed initially
+        expect(screen.getByText('Loading user data...')).toBeInTheDocument();
     });
 });
