@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import ProductsService from '../services/Products.service';
 
 function ProductCategoryRow({ category }) {
     return (
       <tr>
-        <th colSpan="2">
+        <th colSpan='2'>
           {category}
         </th>
       </tr>
@@ -45,7 +46,7 @@ function ProductCategoryRow({ category }) {
     });
   
     return (
-      <table>
+      <table data-testid='products-table'>
         <thead>
           <tr>
             <th>Name</th>
@@ -58,27 +59,30 @@ function ProductCategoryRow({ category }) {
   }
   
   export default function Products() {
-    const [fruits, setFruits] = useState(null);
+    const [products, setProducts] = useState(null);
+    const initialized = useRef(false);
     
     useEffect(() => {
-        const fetchFruits = async () => {
+        const fetchProducts = async () => {
             try {
-                const response = await fetch('http://localhost:8080/products.json');
-                const fruits = await response.json();
-                setFruits(fruits);
+                const products = await ProductsService.fetchProducts();
+                setProducts(products);
             } catch (error) {
-                console.error('Error fetching fruits:', error);
+                console.error(`Error fetching products: ${error}`);
             }
         };
-
-        fetchFruits();
-    }, []);
+        
+        if (!initialized.current) {
+          initialized.current = true;
+          fetchProducts();
+        }
+    });
 
     return (<section>
-        {fruits ? (
-            <ProductTable products={fruits} />
+        {products ? (
+            <ProductTable products={products} />
         ) : (
-            <p>Loading fruits...</p>
+            <p>Loading products...</p>
         )}
     </section>);
   }

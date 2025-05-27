@@ -17,6 +17,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test:coverage": "npm test -- --coverage --watchAll=false",
+    "test:mutation": "npx stryker run",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -38,9 +39,16 @@
     ]
   },
   "jest": {
-    "coveragePathIgnorePatterns" : [
+    "coveragePathIgnorePatterns": [
       "<rootDir>/src/index.js",
-      "<rootDir>/src/reportWebVitals.js" 
+      "<rootDir>/src/reportWebVitals.js"
     ]
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ],
+  "devDependencies": {
+    "@stryker-mutator/jest-runner": "^9.0.1"
   }
 }
