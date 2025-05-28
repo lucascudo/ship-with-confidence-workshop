@@ -15,6 +15,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "cypress": "npx cypress open",
     "test": "react-scripts test",
     "test:coverage": "npm test -- --coverage --watchAll=false",
     "test:mutation": "npx stryker run",
@@ -49,6 +50,7 @@
     "plugin:react/recommended"
   ],
   "devDependencies": {
-    "@stryker-mutator/jest-runner": "^9.0.1"
+    "@stryker-mutator/jest-runner": "^9.0.1",
+    "cypress": "^14.4.0"
   }
 }

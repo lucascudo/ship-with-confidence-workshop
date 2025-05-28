@@ -13,6 +13,7 @@
     "/src/reportWebVitals.js"
   ],
   "jest": {
+    "enableFindRelatedTests": true,
     "projectType": "create-react-app",
     "config": {
       "testMatch": ["./**/*.test.js"]
