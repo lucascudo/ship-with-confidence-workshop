@@ -5,7 +5,7 @@ test('renders home page header and buttons', () => {
   render(<App />);
   
   const screenElements = [
-    { text: 'Home Page' },
+    { text: 'Home Page', navigateTo: '' },
     { text: 'Go to User Profile', navigateTo: 'user-profile' },
     { text: 'Home', navigateTo: '' },
     { text: 'Go to Products List', navigateTo: 'products' }
@@ -15,8 +15,6 @@ test('renders home page header and buttons', () => {
     const element = screen.getByText(screenElement.text);
     expect(element).toBeInTheDocument();
     fireEvent.click(element);
-    if (screenElement.navigateTo) {
-      expect(window.location.href.split('/').pop()).toBe(screenElement.navigateTo);
-    }
+    expect(window.location.href.split('/').pop()).toBe(screenElement.navigateTo);
   });
 });
